@@ -2,7 +2,7 @@
 FROM node:20-alpine
 
 # Install required system dependencies
-RUN apk add --no-cache python3 make g++
+RUN apk add --no-cache python3 make g++ 
 
 # Set working directory
 WORKDIR /server
@@ -19,11 +19,11 @@ COPY . .
 # Build the application
 RUN yarn build
 
-# Expose backend port
-EXPOSE 9000
-
 # Copy and run start script
 COPY start.sh /server/start.sh
 RUN chmod +x /server/start.sh
+
+# Expose backend port
+EXPOSE 9000
 
 CMD ["/server/start.sh"]
