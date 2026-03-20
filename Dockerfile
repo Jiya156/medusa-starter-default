@@ -9,8 +9,11 @@ WORKDIR /server
 # Copy package files
 COPY package.json yarn.lock ./
 
-# Install dependencies with classic yarn
-RUN npm install -g yarn && yarn install
+# Create .yarnrc.yml to use node-modules linker
+RUN echo "nodeLinker: node-modules" > .yarnrc.yml
+
+# Install dependencies using built-in yarn
+RUN yarn install --ignore-engines
 
 # Copy all source code
 COPY . .
