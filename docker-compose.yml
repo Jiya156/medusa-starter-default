@@ -13,14 +13,14 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data: /var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - medusa_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U medusa_user -d medusa_db"]
       interval: 10s
       timeout: 5s
-      retires: 5
+      retries: 5
 
   backend:
     build:
@@ -39,7 +39,7 @@ services:
       COOKIE_SECRET: some_cookie_secret_456
       STORE_CORS: http://localhost:8000
       ADMIN_CORS: http://localhost:9000
-      AUTH_CORS: http://localhost:8000, http://localhost:9000
+      AUTH_CORS: http://localhost:8000,http://localhost:9000
       MEDUSA_WORKER_MODE: shared
       MEDUSA_BACKEND_URL: http://localhost:9000
       NODE_ENV: development
@@ -54,18 +54,19 @@ services:
     container_name: medusa_frontend
     restart: unless-stopped
     depends_on:
-    - backend
+      - backend
     ports:
-     - "8000:8000"
+      - "8000:8000"
     environment:
-      MDUSA_BACKEND_URL: http://backend:9000
-      NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY: pk_6ba8ea174af9a5002f6fbcc3db12a2d11fcf58e5155e4c2bae8dc9748df4a04f
+      MEDUSA_BACKEND_URL: http://backend:9000
+      NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY: your_pk_key_here
       NEXT_PUBLIC_BASE_URL: http://localhost:8000
     networks:
       - medusa_network
 
 volumes:
   postgres_data:
+    driver: local
 
 networks:
   medusa_network:
